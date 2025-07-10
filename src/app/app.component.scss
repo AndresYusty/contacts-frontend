@@ -1,0 +1,57 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e0e7ff 100%); // fondo pastel suave
+}
+
+.app-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
+  h1 {
+    margin: 0;
+    color: #222;
+    font-size: 2rem;
+    font-weight: 300;
+    text-align: center;
+  }
+}
+
+.app-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.app-footer {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  text-align: center;
+  
+  p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .app-header {
+    padding: 1rem;
+    
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .app-main {
+    padding: 1rem;
+  }
+} 

@@ -1,0 +1,89 @@
+<div class="contact-list-container">
+  
+  <!-- Header with actions -->
+  <div class="list-header">
+    <div class="header-left">
+      <h2>Lista de Contactos</h2>
+      <p class="contact-count">{{ filteredContacts.length }} contacto{{ filteredContacts.length !== 1 ? 's' : '' }}</p>
+    </div>
+    
+    <div class="header-actions">
+      <button 
+        class="btn btn-primary" 
+        (click)="addNewContact()"
+        [disabled]="showForm">
+        <i class="icon">+</i>
+        Nuevo Contacto
+      </button>
+      
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-container">
+    <div class="search-input-wrapper">
+      <i class="search-icon">🔍</i>
+      <input 
+        type="text" 
+        placeholder="Buscar contactos..." 
+        [(ngModel)]="searchTerm"
+        class="search-input">
+      <button 
+        *ngIf="searchTerm" 
+        class="clear-search"
+        (click)="clearSearch()">
+        ✕
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando contactos...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-container">
+    <div class="error-message">
+      <i class="error-icon">⚠️</i>
+      <p>{{ error }}</p>
+      <button class="btn btn-secondary" (click)="loadContacts()">Reintentar</button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && !error && filteredContacts.length === 0" class="empty-state">
+    <div class="empty-icon">📇</div>
+    <h3>No hay contactos</h3>
+    <p *ngIf="searchTerm">No se encontraron contactos que coincidan con tu búsqueda.</p>
+    <p *ngIf="!searchTerm">Comienza agregando tu primer contacto o carga datos iniciales.</p>
+    <button 
+      *ngIf="!searchTerm" 
+      class="btn btn-primary" 
+      (click)="addNewContact()">
+      Agregar Primer Contacto
+    </button>
+  </div>
+
+  <!-- Contact form overlay -->
+  <div *ngIf="showForm" class="form-overlay">
+    <div class="form-container">
+      <app-contact-form
+        [contact]="editingContact"
+        (contactSaved)="onContactSaved($event)"
+        (cancelled)="onFormCancelled()">
+      </app-contact-form>
+    </div>
+  </div>
+
+  <!-- Contact list -->
+  <div *ngIf="!loading && !error && filteredContacts.length > 0" class="contacts-grid">
+    <app-contact-card
+      *ngFor="let contact of filteredContacts"
+      [contact]="contact"
+      (edit)="editContact($event)"
+      (delete)="deleteContact($event)">
+    </app-contact-card>
+  </div>
+</div> 

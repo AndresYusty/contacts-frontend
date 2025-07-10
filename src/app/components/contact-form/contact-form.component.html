@@ -1,0 +1,124 @@
+<div class="contact-form-container">
+  <div class="form-header">
+    <h2>{{ contact ? 'Editar Contacto' : 'Nuevo Contacto' }}</h2>
+    <button class="close-btn" (click)="onCancel()" [disabled]="loading">
+      ✕
+    </button>
+  </div>
+
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+    <!-- Error message -->
+    <div *ngIf="error" class="error-message">
+      <i class="error-icon">⚠️</i>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="form-section">
+      <h3>Información Personal</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first_name">Nombre *</label>
+          <input 
+            type="text" 
+            id="first_name"
+            formControlName="first_name"
+            placeholder="Ingrese el nombre"
+            [class.invalid]="isFieldInvalid('first_name')">
+          <div *ngIf="isFieldInvalid('first_name')" class="error-text">
+            {{ getFieldError('first_name') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="last_name">Apellido *</label>
+          <input 
+            type="text" 
+            id="last_name"
+            formControlName="last_name"
+            placeholder="Ingrese el apellido"
+            [class.invalid]="isFieldInvalid('last_name')">
+          <div *ngIf="isFieldInvalid('last_name')" class="error-text">
+            {{ getFieldError('last_name') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email"
+          formControlName="email"
+          placeholder="ejemplo@email.com"
+          [class.invalid]="isFieldInvalid('email')">
+        <div *ngIf="isFieldInvalid('email')" class="error-text">
+          {{ getFieldError('email') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone Numbers -->
+    <div class="form-section">
+      <div class="section-header">
+        <h3>Números de Teléfono</h3>
+        <button 
+          type="button" 
+          class="btn btn-secondary btn-sm"
+          (click)="addPhone()">
+          <i class="icon">+</i>
+          Agregar Teléfono
+        </button>
+      </div>
+
+      <div formArrayName="phones" class="phones-container">
+        <div 
+          *ngFor="let phone of phones.controls; let i = index" 
+          class="phone-item">
+          
+          <div class="phone-input-wrapper">
+            <input 
+              type="tel"
+              formControlName="{{i}}"
+              placeholder="+34 123 456 789"
+              [class.invalid]="isPhoneInvalid(i)">
+            
+            <button 
+              *ngIf="phones.length > 1"
+              type="button" 
+              class="remove-phone-btn"
+              (click)="removePhone(i)"
+              [disabled]="loading">
+              ✕
+            </button>
+          </div>
+          
+          <div *ngIf="isPhoneInvalid(i)" class="error-text">
+            {{ getPhoneError(i) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn btn-secondary"
+        (click)="onCancel()"
+        [disabled]="loading">
+        Cancelar
+      </button>
+      
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="loading || contactForm.invalid">
+        <div *ngIf="loading" class="loading-spinner-small"></div>
+        <span *ngIf="!loading">{{ contact ? 'Actualizar' : 'Crear' }} Contacto</span>
+        <span *ngIf="loading">Guardando...</span>
+      </button>
+    </div>
+  </form>
+</div> 

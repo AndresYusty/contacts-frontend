@@ -1,0 +1,52 @@
+<div class="contact-card">
+  <div class="card-header">
+    <div class="avatar">
+      <span class="initials">{{ getInitials() }}</span>
+    </div>
+    
+    <div class="contact-info">
+      <h3 class="contact-name">{{ getFullName() }}</h3>
+      <p class="contact-email">{{ contact.email }}</p>
+    </div>
+    
+    <div class="card-actions">
+      <button class="action-btn edit-btn" (click)="onEdit()" title="Editar contacto">
+        <i class="icon">✏️</i>
+      </button>
+      <button class="action-btn delete-btn" (click)="onDelete()" title="Eliminar contacto">
+        <i class="icon">🗑️</i>
+      </button>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <!-- Phone Numbers -->
+    <div *ngIf="contact.phones && contact.phones.length > 0" class="phones-section">
+      <h4>Teléfonos</h4>
+      <div class="phones-list">
+        <div *ngFor="let phone of contact.phones" class="phone-item">
+          <i class="phone-icon">📞</i>
+          <span class="phone-number">{{ phone }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- No phones message -->
+    <div *ngIf="!contact.phones || contact.phones.length === 0" class="no-phones">
+      <i class="no-phones-icon">📞</i>
+      <span>Sin números de teléfono</span>
+    </div>
+
+    <!-- Contact dates -->
+    <div class="contact-dates">
+      <div class="date-item">
+        <span class="date-label">Creado:</span>
+        <span class="date-value">{{ contact.created_at ? formatDate(contact.created_at) : 'N/A' }}</span>
+      </div>
+      <div *ngIf="contact.updated_at && contact.updated_at !== contact.created_at" class="date-item">
+        <span class="date-label">Actualizado:</span>
+        <span class="date-value">{{ formatDate(contact.updated_at) }}</span>
+      </div>
+    </div>
+  </div>
+</div> 
