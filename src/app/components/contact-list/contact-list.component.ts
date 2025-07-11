@@ -27,7 +27,12 @@ export class ContactListComponent implements OnInit {
     
     this.contactService.getContacts().subscribe({
       next: (contacts) => {
-        this.contacts = contacts;
+        // Ordenar contactos por cantidad de números de teléfono (de mayor a menor)
+        this.contacts = contacts.sort((a, b) => {
+          const aPhoneCount = a.phones ? a.phones.length : 0;
+          const bPhoneCount = b.phones ? b.phones.length : 0;
+          return bPhoneCount - aPhoneCount; // Orden descendente (más teléfonos primero)
+        });
         this.loading = false;
       },
       error: (error) => {
@@ -75,6 +80,14 @@ export class ContactListComponent implements OnInit {
       // Add new contact
       this.contacts.push(contact);
     }
+    
+    // Reordenar la lista después de agregar/editar
+    this.contacts.sort((a, b) => {
+      const aPhoneCount = a.phones ? a.phones.length : 0;
+      const bPhoneCount = b.phones ? b.phones.length : 0;
+      return bPhoneCount - aPhoneCount; // Orden descendente (más teléfonos primero)
+    });
+    
     this.showForm = false;
     this.editingContact = null;
   }
@@ -85,19 +98,27 @@ export class ContactListComponent implements OnInit {
   }
 
   get filteredContacts(): Contact[] {
-    if (!this.searchTerm.trim()) {
-      return this.contacts;
+    let filteredContacts = this.contacts;
+    
+    // Aplicar filtro de búsqueda si hay término de búsqueda
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase();
+      filteredContacts = this.contacts.filter(contact => 
+        contact.first_name.toLowerCase().includes(term) ||
+        contact.last_name.toLowerCase().includes(term) ||
+        contact.email.toLowerCase().includes(term) ||
+        (contact.phones && contact.phones.some(phone => 
+          phone.toLowerCase().includes(term)
+        ))
+      );
     }
     
-    const term = this.searchTerm.toLowerCase();
-    return this.contacts.filter(contact => 
-      contact.first_name.toLowerCase().includes(term) ||
-      contact.last_name.toLowerCase().includes(term) ||
-      contact.email.toLowerCase().includes(term) ||
-      (contact.phones && contact.phones.some(phone => 
-        phone.toLowerCase().includes(term)
-      ))
-    );
+    // Ordenar por cantidad de números de teléfono (de mayor a menor)
+    return filteredContacts.sort((a, b) => {
+      const aPhoneCount = a.phones ? a.phones.length : 0;
+      const bPhoneCount = b.phones ? b.phones.length : 0;
+      return bPhoneCount - aPhoneCount; // Orden descendente (más teléfonos primero)
+    });
   }
 
   clearSearch(): void {
